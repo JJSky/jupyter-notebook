@@ -296,15 +296,15 @@ static void displayPathtoPrincess(int n, String [] grid){
 }
 
 static void Main(String[] args) {
-        int m;
+    int m;
 
-        m = int.Parse(Console.ReadLine());
+    m = int.Parse(Console.ReadLine());
 
-        String[] grid  = new String[m];
-        for(int i=0; i < m; i++) {
-            grid[i] = Console.ReadLine(); 
-        }
+    String[] grid  = new String[m];
+    for(int i=0; i < m; i++) {
+        grid[i] = Console.ReadLine(); 
+    }
 
-        displayPathtoPrincess(m,grid);
-     }
+    displayPathtoPrincess(m,grid);
+    }
 }
