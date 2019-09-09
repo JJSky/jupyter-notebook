@@ -308,3 +308,75 @@ static void Main(String[] args) {
     displayPathtoPrincess(m,grid);
     }
 }
+
+
+// Log hero's next move to navigate through grid to princess
+// m = hero; p = princess;
+// where grid like: 
+//    [-----]
+//    [-m---]
+//    [-----]
+//    [-----]
+//    [----p]
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+
+static void nextMove(int gSize,int heroY, int heroX, String [] grid){
+    int princessX = 0;
+    int princessY = 0;
+    int xDif = 0;
+    int yDif = 0;
+    string nextMove = "";
+    
+    for (int i = 0; i < gSize; i++) {
+        for (int j = 0; j < gSize; j++) {
+            if (grid[i][j].Equals('p')) {
+                princessX = j;
+                princessY = i;
+            }
+        }
+    }
+    
+    xDif = heroX - princessX;
+    yDif = heroY - princessY;
+    
+    if (xDif != 0) {
+        if (xDif > 0) {
+            nextMove = "LEFT";
+        } else if (xDif < 0) {
+            nextMove = "RIGHT";
+        }
+    }
+    
+    if (yDif != 0) {
+        if (yDif > 0) {
+            nextMove = "UP";
+        } else if (yDif < 0) {
+            nextMove = "DOWN";
+        }
+    }
+    
+    Console.WriteLine(nextMove);
+}
+
+static void Main(String[] args) {
+    int n;
+
+    n = int.Parse(Console.ReadLine());
+    String pos;
+    pos = Console.ReadLine();
+    String[] position = pos.Split(' ');
+    int [] int_pos = new int[2];
+    int_pos[0] = Convert.ToInt32(position[0]);
+    int_pos[1] = Convert.ToInt32(position[1]);
+    String[] grid  = new String[n];
+    for(int i=0; i < n; i++) {
+        grid[i] = Console.ReadLine(); 
+    }
+
+    nextMove(n, int_pos[0], int_pos[1], grid);
+
+    }
+}
