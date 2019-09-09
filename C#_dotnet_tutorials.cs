@@ -229,3 +229,82 @@ foreach (var word in words)
 {
     System.Console.WriteLine($"<{word}>");
 }
+
+// Navigate hero through grid to find princess
+// m = hero; p = princess;
+// where grid like: 
+//    [---]
+//    [-m-]
+//    [--p]
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    
+static void displayPathtoPrincess(int n, String [] grid){
+    int princessX = 0;
+    int princessY = 0;
+    int heroX = 0;
+    int heroY = 0;
+    int xDif = 0;
+    int yDif = 0;
+    
+    // Loop through each row
+    for (int i = 0; i < n; i++) {
+        // Loop through each column
+        for (int j = 0; j < n; j++) {
+            if (grid[i][j].Equals('p')) {
+                // Find princess location
+                princessX = i;
+                princessY = j;
+            } else if (grid[i][j].Equals('m')) {
+                // Find hero location
+                heroX = i;
+                heroY = j;
+            }
+        }
+    }
+    
+    // Get X and Y difference between hero and princess
+    xDif = heroX - princessX;
+    yDif = heroY - princessY;
+    
+    
+    // Navigate hero LEFT OR RIGHT
+    if (xDif > 0) {
+        for (int i = 0; i < xDif; i++) {
+            Console.WriteLine("LEFT");
+        }
+    } else if (xDif < 0) {
+        int xDifPos = Math.Abs(xDif);
+        for (int i = 0; i < xDifPos; i++) {
+            Console.WriteLine("RIGHT");
+        }
+    }
+    
+    // Navigate hero UP OR DOWN
+    if (yDif > 0) {
+        for (int i = 0; i < yDif; i++) {
+            Console.WriteLine("UP");
+        }
+    } else if (yDif < 0) {
+        int yDifPos = Math.Abs(yDif);
+        for (int i = 0; i < yDifPos; i++) {
+            Console.WriteLine("DOWN");
+        }
+    }
+}
+
+static void Main(String[] args) {
+        int m;
+
+        m = int.Parse(Console.ReadLine());
+
+        String[] grid  = new String[m];
+        for(int i=0; i < m; i++) {
+            grid[i] = Console.ReadLine(); 
+        }
+
+        displayPathtoPrincess(m,grid);
+     }
+}
