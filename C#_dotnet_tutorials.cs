@@ -380,3 +380,169 @@ static void Main(String[] args) {
 
     }
 }
+
+// Network custom menu
+public class NetworkCustomMenu : NetworkBehaviour {
+    public Text ipTextBox;
+    public Text portTextBox;
+    
+    public void StartServer()
+    {
+        //note that you can do this directly from hooking the button to the network manager if you want
+        NetworkManager.singleton.StartHost();
+        Debug.Log(NetworkManager.singleton.networkAddress);
+
+    }
+
+    public void JoinAsClient()
+    {
+        //You'll probably want to do a more robust check that the ip is either localhost or an ip format here
+        if (ipTextBox.text != null && ipTextBox.text.Length > 0)
+        {
+            NetworkManager.singleton.networkAddress = ipTextBox.text;
+            //again, we need a more careful check that we have a valid value for port here ideally
+            int x;
+            int.TryParse(portTextBox.text, out x); //usually the port will just be 7777 so this part isn't really nescessary unless you're specifying the port on a server
+            
+            NetworkManager.singleton.networkPort = x;
+            //this is the actual code to start the client
+            NetworkManager.singleton.StartClient();
+        }
+    }
+}
+
+// Animate object
+public class RisingGameObject : MonoBehaviour {
+    Animator anim;
+	void Start () {
+        anim = GetComponent<Animator>();
+        DelegaterSubject.methodDefinedElsewhere += makePlanetRise;
+        DelegaterSubject.methodDefinedElsewhere += logAnimationHappened;
+	}
+	
+    public void makePlanetRise()
+    {
+        anim.SetBool("isRising", true);
+        DelegaterSubject.methodDefinedElsewhere -= makePlanetRise;
+        DelegaterSubject.methodDefinedElsewhere += stopPlanetRise;
+    }
+    public void stopPlanetRise()
+    {
+        anim.SetBool("isRising", false);
+        DelegaterSubject.methodDefinedElsewhere -= stopPlanetRise;
+        DelegaterSubject.methodDefinedElsewhere += makePlanetRise;
+    }
+    public void logAnimationHappened()
+    {
+        Debug.Log("Hey, it worked");
+    }
+}
+
+// Weighted sum
+public static class InputHandler
+{
+    public static string processText(string inS)
+    {
+       return inS;
+    }
+
+    public static double getWeightedSum(double[] gradesArr, double weight)
+    {
+        double sum = 0;
+        foreach (double grade in gradesArr)
+        {
+            sum += grade;
+        }
+        return (sum / gradesArr.Length) * weight;
+    }
+
+    public static double[] parseAsArray(string doubleString)
+    {
+        string[] numAsString = doubleString.Split(' ');
+        double[] arr = new double[numAsString.Length];
+
+        for (int i = 0; i < numAsString.Length; i++)
+        {
+            arr[i] = getNum(numAsString[i]);
+        }
+
+        return arr;
+    }
+
+    public static double getNum(string inS)
+    {
+        try
+        {
+            double num = Double.Parse(inS);
+            return num;
+        }
+        catch (FormatException e)
+        {
+            Debug.Log(e);
+            return -1;
+        }
+    }
+
+    public static bool isNum(string inS)
+    {
+        try
+        {
+            double num = Double.Parse(inS);
+            return true;
+        }
+        catch (FormatException e)
+        {
+            Debug.Log(e);
+            return false;
+        }
+    }
+
+    public static bool betterIsNum(string inS)
+    {
+        if (Double.TryParse(inS, out double j))
+            return true;
+        else
+            return false;
+    }
+}
+
+// Generate objects dynamically
+public class Utilities : MonoBehaviour {
+    public GameObject prefab;
+    public Instantiate instScript;
+    public float spacing = 2f;
+
+    public void instantiatePrefab()
+    {
+        Instantiate(prefab, Vector3.zero, Quaternion.identity);
+    }
+    public void instantiatePrefabAtPosition(Vector3 pos)
+    {
+        Instantiate(prefab, pos, Quaternion.identity);
+    }
+    public void instantiatPrefabsEqualSpacing()
+    {
+        int i = 0;
+        int r = instScript.r; 
+        Vector3 pos;
+        while (i < r) //i=0, r = whatever is input
+        {
+            pos = new Vector3(i * spacing, 2, i * spacing);
+            instantiatePrefabAtPosition(pos);
+            for (int j = 0; j < r; j++)
+            {
+                pos = new Vector3(i * spacing, 2 + j * spacing, i * spacing);
+                instantiatePrefabAtPosition(pos);
+                
+                for (int k = 0; k < r; k++)
+                {
+                    pos = new Vector3(i * spacing + k * spacing, 2 + j * spacing, i * spacing);
+                    instantiatePrefabAtPosition(pos);
+                }
+                
+            }
+            
+            i++;
+        }
+    }
+}
